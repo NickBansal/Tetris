@@ -4,12 +4,16 @@ const context = canvas.getContext('2d');
 const { height, width } = canvas;
 
 context.scale(30, 30);
-context.fillStyle = '#FEC952';
-context.fillRect(0, 0, width, height);
 
 const matrix = [
     [0, 0, 0], [1, 1, 1], [0, 1, 0],
 ];
+
+const player = {
+    pos: { x: 5, y: 5 },
+    matrix,
+};
+
 
 const drawMatrix = (shape, offset) => {
     shape.forEach((row, y) => {
@@ -22,4 +26,15 @@ const drawMatrix = (shape, offset) => {
     });
 };
 
-drawMatrix(matrix, { x: 5, y: 5 });
+const draw = () => {
+    context.fillStyle = '#FEC952';
+    context.fillRect(0, 0, width, height);
+    drawMatrix(player.matrix, player.pos);
+};
+
+const update = () => {
+    draw();
+    requestAnimationFrame(update);
+};
+
+update();
