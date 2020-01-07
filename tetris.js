@@ -15,6 +15,26 @@ const player = {
 };
 
 
+const createMatrix = (w, h) => {
+    const newMatrix = [];
+    while (h--) {
+        newMatrix.push(new Array(w).fill(0));
+    }
+    return newMatrix;
+};
+
+const arena = createMatrix(12, 20);
+
+const merge = (area, person) => {
+    player.matrix.forEach((row, y) => {
+        row.forEach((value, x) => {
+            if (value !== 0) {
+                arena[y + player.pos.y][x + player.pos.x] = value;
+            }
+        });
+    });
+};
+
 const drawMatrix = (shape, offset) => {
     shape.forEach((row, y) => {
         row.forEach((value, x) => {
@@ -36,6 +56,12 @@ let dropCounter = 0;
 const dropInterval = 1000;
 let lastTime = 0;
 
+const playerDrop = () => {
+    player.pos.y++;
+    dropCounter = 0;
+};
+
+
 const update = (time = 0) => {
     const deltaTime = time - lastTime;
     lastTime = time;
@@ -43,12 +69,23 @@ const update = (time = 0) => {
     dropCounter += deltaTime;
 
     if (dropCounter > dropInterval) {
-        player.pos.y++;
-        dropCounter = 0;
+        playerDrop();
     }
 
     draw();
     requestAnimationFrame(update);
 };
+
+document.addEventListener('keydown', ({ key }) => {
+    if (key === 'ArrowLeft') {
+        player.pos.x--;
+    }
+    if (key === 'ArrowRight') {
+        player.pos.x++;
+    }
+    if (key === 'ArrowDown') {
+        playerDrop();
+    }
+});
 
 update();
